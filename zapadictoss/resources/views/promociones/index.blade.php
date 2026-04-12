@@ -14,16 +14,16 @@
 
     @foreach($promociones as $p)
     <tr>
-        <td>{{ $p->producto->nombre }}</td>
-        <td>{{ $p->descuento }}%</td>
-        <td>
-            {{ route('promociones.destroy', $p) }}
-                @csrf
-                @method('DELETE')
-                <button>Eliminar</button>
-            </form>
-        </td>
-    </tr>
+    <td>{{ $p->producto->nombre }}</td>
+    <td>{{ $p->descuento }}%</td>
+    <td>
+        <form action="{{ route('promociones.destroy', $p) }}" method="POST">
+            @csrf
+            @method('DELETE')
+            <button type="submit">Eliminar</button>
+        </form>
+    </td>
+</tr>
     @endforeach
 </table>
 

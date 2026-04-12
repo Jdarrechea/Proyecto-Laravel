@@ -24,10 +24,11 @@ class PromocionController extends Controller
 
     // GUARDAR
     public function store(Request $request)
-    {
-        Promocion::create($request->all());
-        return redirect()->route('promociones.index');
-    }
+{
+    Promocion::create($request->all());
+    return redirect()->route('promociones.index');
+}
+
 
     // ELIMINAR
     public function destroy(Promocion $promocion)
