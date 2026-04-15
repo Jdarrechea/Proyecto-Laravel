@@ -30,7 +30,7 @@
             <td>{{ $p->nombre }}</td>
             <td>{{ $p->marca }}</td>
             <td>{{ $p->categoria }}</td>
-            <td>{{ $p->precio }}</td>
+            <td>{{ number_format((float) $p->precio, 2, ',', '.') }}</td>
             <td>{{ $p->stock }}</td>
         </tr>
         @endforeach

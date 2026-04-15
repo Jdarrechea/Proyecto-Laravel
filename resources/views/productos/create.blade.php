@@ -26,7 +26,7 @@
 
         <div>
             <label for="precio">Precio</label>
-            <input id="precio" name="precio" placeholder="Precio" required>
+            <input id="precio" name="precio" type="number" step="0.01" min="0" placeholder="Precio" required>
         </div>
 
         <div>

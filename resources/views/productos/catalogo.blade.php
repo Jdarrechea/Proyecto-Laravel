@@ -21,6 +21,9 @@
         @foreach($productos as $producto)
         @php
             $imagen = $producto->imagen ? (str_starts_with($producto->imagen, 'http') ? $producto->imagen : asset('storage/' . $producto->imagen)) : 'https://via.placeholder.com/520x360?text=Zapatillas+Zapadictos';
+            $promocion = $producto->promocionActiva;
+            $precioOriginal = (float) $producto->precio;
+            $precioFinal = $promocion ? $producto->precio_con_descuento : $precioOriginal;
         @endphp
         <article class="product-card">
             <img src="{{ $imagen }}" alt="Imagen de {{ $producto->nombre }}">
@@ -29,8 +32,16 @@
                 <h3>{{ $producto->nombre }}</h3>
                 <p class="product-subtitle">{{ $producto->marca }}</p>
                 <p class="product-description">{{ $producto->descripcion ?: 'No hay descripción disponible.' }}</p>
+                @if($promocion)
+                <div class="product-badge">Oferta {{ $promocion->descuento }}% hasta {{ $promocion->fecha_fin->format('d/m/Y') }}</div>
+                @endif
                 <div class="product-meta">
-                    <span>${{ number_format($producto->precio, 2, ',', '.') }}</span>
+                    @if($promocion)
+                    <span class="product-price discount">${{ number_format($precioFinal, 2, ',', '.') }}</span>
+                    <span class="product-original">${{ number_format($precioOriginal, 2, ',', '.') }}</span>
+                    @else
+                    <span>${{ number_format($precioOriginal, 2, ',', '.') }}</span>
+                    @endif
                     <span>Stock: {{ $producto->stock }}</span>
                 </div>
             </div>

@@ -44,7 +44,7 @@
                     <td>{{ $p->nombre }}</td>
                     <td>{{ $p->marca }}</td>
                     <td>{{ $p->categoria }}</td>
-                    <td>${{ number_format($p->precio, 2, ',', '.') }}</td>
+                    <td>${{ number_format((float) $p->precio, 2, ',', '.') }}</td>
                     <td>{{ $p->stock }}</td>
                     <td>
                         <a href="{{ route('productos.edit', $p) }}" class="btn-secondary">Editar</a>

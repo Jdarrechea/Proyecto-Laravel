@@ -27,7 +27,7 @@
 
         <div>
             <label for="precio">Precio</label>
-            <input id="precio" name="precio" value="{{ $producto->precio }}" required>
+            <input id="precio" name="precio" type="number" step="0.01" min="0" value="{{ $producto->precio }}" required>
         </div>
 
         <div>

@@ -32,7 +32,17 @@ class ProductoController extends Controller
 
     public function store(Request $request)
     {
-        $data = $request->all();
+        $data = $request->validate([
+            'nombre' => 'required|string|max:255',
+            'marca' => 'required|string|max:255',
+            'categoria' => 'required|string|max:255',
+            'precio' => 'required|string',
+            'stock' => 'required|integer|min:0',
+            'imagen' => 'nullable|image|max:5120',
+            'descripcion' => 'nullable|string',
+        ]);
+
+        $data['precio'] = (float) str_replace(',', '.', $data['precio']);
 
         if ($request->hasFile('imagen')) {
             $data['imagen'] = $request->file('imagen')->store('productos', 'public');
@@ -49,7 +59,17 @@ class ProductoController extends Controller
 
     public function update(Request $request, Producto $producto)
     {
-        $data = $request->all();
+        $data = $request->validate([
+            'nombre' => 'required|string|max:255',
+            'marca' => 'required|string|max:255',
+            'categoria' => 'required|string|max:255',
+            'precio' => 'required|string',
+            'stock' => 'required|integer|min:0',
+            'imagen' => 'nullable|image|max:5120',
+            'descripcion' => 'nullable|string',
+        ]);
+
+        $data['precio'] = (float) str_replace(',', '.', $data['precio']);
 
         if ($request->hasFile('imagen')) {
             if ($producto->imagen && Storage::disk('public')->exists($producto->imagen)) {
@@ -72,7 +92,7 @@ class ProductoController extends Controller
 
     public function catalogo()
     {
-        $productos = Producto::all();
+        $productos = Producto::with('promocionActiva')->get();
         return view('productos.catalogo', compact('productos'));
     }
 
