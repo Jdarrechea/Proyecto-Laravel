@@ -5,11 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>@yield('title', 'Zapadictos')</title>
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+    @livewireStyles
 </head>
 <body>
     <div class="site-shell">
         <header class="site-header">
-            <a href="{{ route('productos.index') }}" class="brand">
+            <a href="{{ auth()->check() && auth()->user()->role === 'normal' ? route('productos.catalogo') : route('productos.index') }}" class="brand">
                 <span class="brand-mark">Z</span>
                 <div>
                     <strong>Zapadictos</strong>
@@ -17,10 +18,23 @@
                 </div>
             </a>
             <nav class="site-nav">
-                <a href="{{ route('productos.index') }}">Productos</a>
-                <a href="{{ route('productos.catalogo') }}">Catálogo</a>
-                <a href="{{ route('promociones.index') }}">Promociones</a>
-                <a href="{{ route('productos.pdf') }}">Catálogo PDF</a>
+                @auth
+                    @if (auth()->user()->role === 'admin')
+                        <a href="{{ route('productos.index') }}">Productos</a>
+                        <a href="{{ route('productos.catalogo') }}">Catalogo</a>
+                        <a href="{{ route('promociones.index') }}">Promociones</a>
+                        <a href="{{ route('ventas.index') }}">Pedidos</a>
+                        <a href="{{ route('productos.pdf') }}">Catalogo PDF</a>
+                    @else
+                        <a href="{{ route('productos.catalogo') }}">Catalogo</a>
+                    @endif
+                    <form method="POST" action="{{ route('logout') }}" class="logout-form">
+                        @csrf
+                        <button type="submit" class="nav-button">Salir</button>
+                    </form>
+                @else
+                    <a href="{{ route('login') }}">Iniciar sesion</a>
+                @endauth
             </nav>
         </header>
 
@@ -40,5 +54,6 @@
             <p>Zapadictos — Administra tus productos y promociones de forma moderna.</p>
         </footer>
     </div>
+    @livewireScripts
 </body>
 </html>

@@ -92,8 +92,7 @@ class ProductoController extends Controller
 
     public function catalogo()
     {
-        $productos = Producto::with('promocionActiva')->get();
-        return view('productos.catalogo', compact('productos'));
+        return view('productos.catalogo');
     }
 
     public function pdf()
