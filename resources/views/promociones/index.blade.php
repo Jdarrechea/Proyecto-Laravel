@@ -2,7 +2,7 @@
 
 @section('title', 'Promociones - Zapadictos')
 @section('page-title', 'Promociones activas')
-@section('page-description', 'Administra descuentos y promociones para tus productos de calzado.')
+@section('page-description', 'Administra descuentos y promociones para tus productos de calzado favoritos.')
 
 @section('content')
 <div class="card">

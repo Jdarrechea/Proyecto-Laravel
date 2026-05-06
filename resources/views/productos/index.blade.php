@@ -2,7 +2,7 @@
 
 @section('title', 'Productos - Zapadictos')
 @section('page-title', 'Productos disponibles')
-@section('page-description', 'Consulta, crea y administra el inventario de tus calzados.')
+@section('page-description', 'Consulta, crea y administra el inventario de tus calzados favoritos.')
 
 @section('content')
 <div class="card">
