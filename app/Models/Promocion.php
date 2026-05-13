@@ -9,7 +9,7 @@ class Promocion extends Model
 {
     use HasFactory;
 
-    // 👇 NOMBRE REAL DE LA TABLA EN LA BD
+    //  NOMBRE REAL DE LA TABLA EN LA BD
     protected $table = 'promociones';
 
     protected $fillable = [
