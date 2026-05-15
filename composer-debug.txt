@@ -33,8 +33,8 @@ Generating optimized autoload files
 
 In PackageManifest.php line 178:
                                                                                
-  The C:\Users\Santiago\Desktop\Proyecto-Laravel-main\zapadictoss\bootstrap\c  
-  ache directory must be present and writable.                                 
+  The C:\Users\Santiago\Desktop\Proyecto-Laravel-main\zapadictoss\bootstrap\c
+  ache directory must be present and writable.
                                                                                
 
 Script @php artisan package:discover --ansi handling the post-autoload-dump event returned with error code 1
