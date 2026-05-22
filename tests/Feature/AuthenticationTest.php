@@ -11,20 +11,20 @@ class AuthenticationTest extends TestCase
     use RefreshDatabase;
 
     /** @test */
-    public function test_usuario_no_autenticado_es_redirigido_a_login()
+    public function test_usuario_no_autenticado_puede_ver_catalogo()
     {
         $response = $this->get('/');
 
-        $response->assertRedirect(route('login'));
+        $response->assertStatus(200);
+        $response->assertViewIs('productos.catalogo');
     }
 
     /** @test */
-    public function test_login_page_esta_disponible()
+    public function test_login_redirige_al_catalogo()
     {
         $response = $this->get('/login');
 
-        $response->assertStatus(200);
-        $response->assertViewIs('auth.choose-login');
+        $response->assertRedirect(route('productos.catalogo'));
     }
 
     /** @test */
@@ -101,7 +101,7 @@ class AuthenticationTest extends TestCase
         $response = $this->actingAs($user)->post('/logout');
 
         $this->assertGuest();
-        $response->assertRedirect(route('login'));
+        $response->assertRedirect(route('productos.catalogo'));
     }
 
     /** @test */

@@ -16,13 +16,13 @@ class ExampleTest extends TestCase
     {
         $response = $this->get('/');
 
-        $response->assertRedirect(route('login'));
+        $response->assertStatus(200);
     }
 
-    public function test_login_page_is_available()
+    public function test_login_redirects_to_catalog()
     {
         $response = $this->get('/login');
 
-        $response->assertStatus(200);
+        $response->assertRedirect(route('productos.catalogo'));
     }
 }

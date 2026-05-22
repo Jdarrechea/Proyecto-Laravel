@@ -15,17 +15,12 @@ Route::middleware('guest')->group(function () {
 
 Route::post('logout', [AuthController::class, 'logout'])->middleware('auth')->name('logout');
 
+Route::get('/', [ProductoController::class, 'catalogo']);
+Route::get('catalogo', [ProductoController::class, 'catalogo'])->name('productos.catalogo');
+Route::post('ventas', [VentaController::class, 'store'])->name('ventas.store');
+Route::get('ventas/{venta}', [VentaController::class, 'show'])->name('ventas.show');
+
 Route::middleware('auth')->group(function () {
-    Route::get('/', function () {
-        return auth()->user()->role === 'admin'
-            ? redirect()->route('productos.index')
-            : redirect()->route('productos.catalogo');
-    });
-
-    Route::get('catalogo', [ProductoController::class, 'catalogo'])->name('productos.catalogo');
-    Route::post('ventas', [VentaController::class, 'store'])->middleware('role:normal')->name('ventas.store');
-    Route::get('ventas/{venta}', [VentaController::class, 'show'])->name('ventas.show');
-
     Route::middleware('role:admin')->group(function () {
         Route::get('ventas', [VentaController::class, 'index'])->name('ventas.index');
         Route::delete('ventas/historial', [VentaController::class, 'destroyHistory'])->name('ventas.destroy-history');

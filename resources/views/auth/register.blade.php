@@ -74,8 +74,8 @@
 
             <div class="form-footer">
                 <button type="submit" class="btn login-button">Crear cuenta</button>
-                <a href="{{ route('login.type', 'normal') }}" class="btn-secondary login-button">Ya tengo cuenta</a>
-                <a href="{{ route('login') }}" class="btn-secondary login-button">Cambiar tipo de usuario</a>
+                <a href="{{ route('login') }}" class="btn-secondary login-button">Ya tengo cuenta</a>
+                <a href="{{ route('login.type', 'admin') }}" class="btn-secondary login-button">Iniciar como administrador</a>
             </div>
         </form>
     </main>

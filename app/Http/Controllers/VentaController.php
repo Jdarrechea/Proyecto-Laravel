@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\Producto;
+use App\Models\User;
 use App\Models\Venta;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 use Illuminate\View\View;
 
 class VentaController extends Controller
@@ -31,6 +33,10 @@ class VentaController extends Controller
 
     public function store(Request $request): RedirectResponse
     {
+        if ($request->user()?->role === 'admin') {
+            abort(403);
+        }
+
         $request->validate([
             'metodo_pago' => ['required', 'in:nequi'],
             'nombre_envio' => ['required', 'string', 'max:255'],
@@ -45,7 +51,9 @@ class VentaController extends Controller
             return redirect()->route('productos.catalogo');
         }
 
-        $venta = DB::transaction(function () use ($carrito, $request) {
+        $cliente = $request->user() ?: $this->clienteWeb();
+
+        $venta = DB::transaction(function () use ($carrito, $request, $cliente) {
             $detalles = [];
             $total = 0;
 
@@ -72,7 +80,7 @@ class VentaController extends Controller
             abort_if(empty($detalles), 422);
 
             $venta = Venta::create([
-                'user_id' => auth()->id(),
+                'user_id' => $cliente->id,
                 'total' => $total,
                 'estado_pago' => 'pendiente',
                 'metodo_pago' => 'nequi',
@@ -81,7 +89,7 @@ class VentaController extends Controller
                 'pais_envio' => $request->pais_envio,
                 'ciudad_envio' => $request->ciudad_envio,
                 'direccion_envio' => $request->direccion_envio,
-                'referencia_pago' => 'PAY-' . now()->format('YmdHis') . '-' . auth()->id(),
+                'referencia_pago' => 'PAY-' . now()->format('YmdHis') . '-' . $cliente->id,
             ]);
 
             foreach ($detalles as $detalle) {
@@ -101,6 +109,7 @@ class VentaController extends Controller
         });
 
         session()->forget('carrito');
+        session()->push('pedidos_realizados', $venta->id);
 
         return redirect()->route('ventas.show', $venta);
     }
@@ -136,10 +145,28 @@ class VentaController extends Controller
 
     public function show(Venta $venta): View
     {
-        abort_unless($venta->user_id === auth()->id() || auth()->user()->role === 'admin', 403);
+        $user = auth()->user();
+        $pedidosRealizados = session('pedidos_realizados', []);
+        $pedidoDeLaSesion = in_array($venta->id, $pedidosRealizados, true);
+        $pedidoDelUsuario = $user && $venta->user_id === $user->id;
+        $esAdmin = $user && $user->role === 'admin';
+
+        abort_unless($pedidoDeLaSesion || $pedidoDelUsuario || $esAdmin, 403);
 
         $venta->load('detalles.producto', 'usuario');
 
         return view('ventas.show', compact('venta'));
+    }
+
+    private function clienteWeb(): User
+    {
+        return User::firstOrCreate(
+            ['email' => 'cliente@zapadictos.local'],
+            [
+                'name' => 'Cliente Web',
+                'password' => bcrypt(Str::random(32)),
+                'role' => 'normal',
+            ]
+        );
     }
 }

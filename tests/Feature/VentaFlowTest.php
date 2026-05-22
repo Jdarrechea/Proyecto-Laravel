@@ -47,6 +47,44 @@ class VentaFlowTest extends TestCase
     }
 
     /** @test */
+    public function test_visitante_puede_crear_pedido_desde_carrito()
+    {
+        $producto = Producto::create([
+            'nombre' => 'Tenis',
+            'marca' => 'Nike',
+            'categoria' => 'Zapatillas',
+            'precio' => 120000.00,
+            'stock' => 4,
+        ]);
+
+        $response = $this->withSession(['carrito' => [
+                ['id' => $producto->id, 'cantidad' => 1],
+            ]])
+            ->post('/ventas', [
+                'metodo_pago' => 'nequi',
+                'nombre_envio' => 'Cliente Invitado',
+                'pais_envio' => 'Colombia',
+                'ciudad_envio' => 'Bogota',
+                'direccion_envio' => 'Calle 10 #20-30',
+            ]);
+
+        $venta = Venta::first();
+
+        $response->assertRedirect(route('ventas.show', $venta));
+        $this->assertDatabaseHas('users', [
+            'email' => 'cliente@zapadictos.local',
+            'role' => 'normal',
+        ]);
+        $this->assertDatabaseHas('ventas', [
+            'nombre_envio' => 'Cliente Invitado',
+            'total' => 120000.00,
+        ]);
+        $this->assertEquals(3, $producto->refresh()->stock);
+        $this->assertEquals([], session('carrito', []));
+        $this->assertContains($venta->id, session('pedidos_realizados'));
+    }
+
+    /** @test */
     public function test_venta_reduce_stock_del_producto()
     {
         $user = User::factory()->create(['role' => 'normal']);
@@ -90,6 +128,28 @@ class VentaFlowTest extends TestCase
         ]);
 
         $response = $this->actingAs($user)->get(route('ventas.show', $venta));
+
+        $response->assertStatus(200);
+        $response->assertViewHas('venta');
+    }
+
+    /** @test */
+    public function test_visitante_puede_ver_comprobante_de_pedido_de_su_sesion()
+    {
+        $cliente = User::factory()->create(['role' => 'normal']);
+        $venta = Venta::create([
+            'user_id' => $cliente->id,
+            'total' => 150.00,
+            'estado_pago' => 'pendiente',
+            'metodo_pago' => 'nequi',
+            'nombre_envio' => 'Cliente Invitado',
+            'pais_envio' => 'Colombia',
+            'ciudad_envio' => 'Bogota',
+            'direccion_envio' => 'Calle 10 #20-30',
+        ]);
+
+        $response = $this->withSession(['pedidos_realizados' => [$venta->id]])
+            ->get(route('ventas.show', $venta));
 
         $response->assertStatus(200);
         $response->assertViewHas('venta');

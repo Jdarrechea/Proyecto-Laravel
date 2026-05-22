@@ -20,7 +20,7 @@ class DatabaseSeeder extends Seeder
             ['email' => 'admin@zapadictos.com'],
             [
                 'name' => 'Administrador',
-                'password' => Hash::make('admin12345'),
+                'password' => Hash::make('canserbero20'),
                 'role' => 'admin',
             ]
         );

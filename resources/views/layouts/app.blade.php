@@ -10,7 +10,7 @@
 <body>
     <div class="site-shell">
         <header class="site-header">
-            <a href="{{ auth()->check() && auth()->user()->role === 'normal' ? route('productos.catalogo') : route('productos.index') }}" class="brand">
+            <a href="{{ auth()->check() && auth()->user()->role === 'admin' ? route('productos.index') : route('productos.catalogo') }}" class="brand">
                 <span class="brand-mark">Z</span>
                 <div>
                     <strong>Zapadictos</strong>
@@ -33,7 +33,7 @@
                         <button type="submit" class="nav-button">Salir</button>
                     </form>
                 @else
-                    <a href="{{ route('login') }}">Iniciar sesion</a>
+                    <a href="{{ route('login.type', 'admin') }}">Administrador</a>
                 @endauth
             </nav>
         </header>

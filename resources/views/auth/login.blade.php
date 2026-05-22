@@ -59,8 +59,10 @@
                 <button type="submit" class="btn login-button">Entrar</button>
                 @if($type === 'normal')
                     <a href="{{ route('register') }}" class="btn-secondary login-button">Registrarse como usuario</a>
+                    <a href="{{ route('login.type', 'admin') }}" class="btn-secondary login-button">Iniciar como administrador</a>
+                @else
+                    <a href="{{ route('login') }}" class="btn-secondary login-button">Iniciar como usuario normal</a>
                 @endif
-                <a href="{{ route('login') }}" class="btn-secondary login-button">Cambiar tipo de usuario</a>
             </div>
         </form>
     </main>

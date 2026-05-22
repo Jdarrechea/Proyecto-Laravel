@@ -11,7 +11,7 @@ class AuthController extends Controller
 {
     public function showLogin()
     {
-        return view('auth.choose-login');
+        return redirect()->route('productos.catalogo');
     }
 
     public function showLoginForm(string $type)
@@ -95,6 +95,6 @@ class AuthController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect()->route('login');
+        return redirect()->route('productos.catalogo');
     }
 }

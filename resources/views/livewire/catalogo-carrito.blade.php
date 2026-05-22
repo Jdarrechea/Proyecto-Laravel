@@ -1,4 +1,9 @@
 <div>
+    @php
+        $esAdmin = auth()->check() && auth()->user()->role === 'admin';
+        $esNormal = ! $esAdmin;
+    @endphp
+
     <section class="catalog-dashboard">
         <div class="dashboard-stat">
             <span>En carrito</span>
@@ -10,7 +15,7 @@
         </div>
     </section>
 
-    @if(auth()->user()->role === 'normal')
+    @if($esNormal)
         <section class="cart-panel cart-panel-inline">
             <div class="cart-header">
                 <div>
@@ -69,7 +74,7 @@
                                 <div class="shipping-grid">
                                     <div>
                                         <label for="nombre_envio">Nombre completo</label>
-                                        <input id="nombre_envio" name="nombre_envio" value="{{ old('nombre_envio', auth()->user()->name) }}" required>
+                                        <input id="nombre_envio" name="nombre_envio" value="{{ old('nombre_envio', auth()->user()->name ?? '') }}" required>
                                     </div>
 
                                     <div>
@@ -135,7 +140,7 @@
                     <h2>Catalogo visual</h2>
                     <p class="page-description">Explora las zapatillas y agrega tus favoritas al carrito.</p>
                 </div>
-                @if(auth()->user()->role === 'admin')
+                @if($esAdmin)
                     <div class="actions">
                         <a href="{{ route('productos.create') }}" class="btn">Agregar producto</a>
                     </div>
@@ -170,7 +175,7 @@
                                     @endif
                                     <span>Stock: {{ $producto->stock }}</span>
                                 </div>
-                                @if(auth()->user()->role === 'normal')
+                                @if($esNormal)
                                     <button type="button" class="btn product-cart-button" wire:click="agregarProducto({{ $producto->id }})">
                                         Agregar al carrito
                                     </button>
